@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<categories>
+    <category id= "1">
+        <name> Continental </name>
+    </category>
+    <category id= "2">
+        <name> Thai </name>
+    </category>
+    <category id= "3">
+        <name> Western </name>
+    </category>
+    <category id= "4">
+        <name> Asian </name>
+    </category>
+</categories>
