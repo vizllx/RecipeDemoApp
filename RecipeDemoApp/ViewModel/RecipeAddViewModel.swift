@@ -15,7 +15,10 @@ import UIKit
 protocol RecipeAddViewModelProtocol: class {
 
     func saveRecipes(recipeTitle:String?,recipeIngredients:String?,recipeSteps:String?,recipeCategory:String?,recipeImage:UIImage?)
-     func getCategories() -> [Category]
+
+    func updateRecipes(oldReceipe:Recipes,recipeTitle:String?,recipeIngredients:String?,recipeSteps:String?,recipeCategory:String?,recipeImage:UIImage?)
+
+    func getCategories() -> [Category]
 
 }
 protocol RecipeAddViewModelDelegate: class {
@@ -36,8 +39,29 @@ class RecipeAddViewModel:RecipeAddViewModelProtocol {
         return []
     }
 
-    func saveRecipes(recipeTitle:String?,recipeIngredients:String?,recipeSteps:String?,recipeCategory:String?,recipeImage:UIImage?){
+    func updateRecipes(oldReceipe:Recipes,recipeTitle:String?,recipeIngredients:String?,recipeSteps:String?,recipeCategory:String?,recipeImage:UIImage?){
+        if  recipeTitle != "" {
+            guard let app = UIApplication.shared.delegate as? AppDelegate  else {
+                return
+            }
+            let context = app.persistentContainer.viewContext
 
+            oldReceipe.title = recipeTitle
+            oldReceipe.ingredients = recipeIngredients
+            oldReceipe.steps = recipeSteps
+            oldReceipe.category = recipeCategory
+            let data = recipeImage?.pngData()
+            oldReceipe.image = data  as Data?
+
+            do {
+                try context.save()
+            } catch {
+                print("could not save")
+            }
+        }
+    }
+
+    func saveRecipes(recipeTitle:String?,recipeIngredients:String?,recipeSteps:String?,recipeCategory:String?,recipeImage:UIImage?){
         if  recipeTitle != "" {
             guard let app = UIApplication.shared.delegate as? AppDelegate  else {
                 return

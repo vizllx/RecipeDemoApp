@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RecipeListViewController: UIViewController, UITableViewDataSource  {
+class RecipeListViewController: UIViewController  {
 
 
     // MARK: - Properties
@@ -30,10 +30,19 @@ class RecipeListViewController: UIViewController, UITableViewDataSource  {
 
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "detailSegue") {
+            let recipeDetailViewController = segue.destination as? RecipeDetailViewController
+            if let row = (sender as? IndexPath)?.row, let recipe = viewModel?.recipes[row] {
+                recipeDetailViewController?.recipes = recipe
+            }
+        }
+    }
+
 }
 
-// MARK: - UITableViewDelegate
-extension RecipeListViewController: UITableViewDelegate
+// MARK: - UITableViewDelegate & UITableViewDataSource
+extension RecipeListViewController: UITableViewDelegate,UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         (viewModel?.recipes.count)! 
@@ -42,12 +51,18 @@ extension RecipeListViewController: UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ReceipeListCell") as? ReceipeListCell {
             if let recipe = viewModel?.recipes[indexPath.row]  {
-            cell.configureCell(recipe: recipe)
+                cell.configureCell(recipe: recipe)
             }
             return cell
         }else {
             return ReceipeListCell()
         }
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "detailSegue", sender: indexPath)
+
+    }
+
 }
 
